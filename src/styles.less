@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+
+@primary-color: #919191;
+@secondary-color: #9D2ED1;
+
+@font-family: 'Amatic SC', cursive;
+
+html {
+    box-sizing: border-box;
+    font-family: @font-family;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+}
+
+*, *::after, *::before {
+    box-sizing: inherit;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+
+    span {
+        color: @secondary-color;
+    }
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 5rem;
+
+    .nav_button {
+        font-size: 2rem;
+        min-width: 10rem;
+        text-decoration: none;
+        color: black;
+
+        &:hover {
+            color: @secondary-color;
+        }
+    }
+}
