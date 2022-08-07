@@ -1,3 +1,9 @@
+import { 
+  animate, 
+  style, 
+  transition, 
+  trigger,
+  AnimationEvent } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
 
@@ -9,7 +15,25 @@ interface Item {
 @Component({
   selector: 'app-gallery-lightbox',
   templateUrl: './gallery-lightbox.component.html',
-  styleUrls: ['./gallery-lightbox.component.less']
+  styleUrls: ['./gallery-lightbox.component.less'],
+  animations: [
+    trigger('animation', [
+      transition('void => visible', [
+        style({transform: 'scale(0.5)'}),
+        animate('150ms', style({transform: 'scale(1)'}))
+      ]),
+      transition('visible => void', [
+        style({transform: 'scale(1)'}),
+        animate('150ms', style({transform: 'scale(0.5)'}))
+      ]),
+    ]),
+    trigger('animation2', [
+      transition(':leave', [
+        style({opacity: 1}),
+        animate('50ms', style({opacity: 0.8}))
+      ])
+    ])
+  ]
 })
 export class GalleryLightboxComponent implements OnInit {
   @Input() galleryData: Item[] = [    {
@@ -64,11 +88,52 @@ export class GalleryLightboxComponent implements OnInit {
     imageSrc: 'https://images.unsplash.com/photo-1506260408121-e353d10b87c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80',
     imageAlt: '13'
   }];
+  showCount = true;
+  previewImage = false;
+  showMask = false;
+  currentLightboxImage: Item = this.galleryData[0];
+  currentIndex = 0;
+  controls = true;
+  totalImageCount = 0;
 
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.galleryData);
+    this.totalImageCount = this.galleryData.length;
   }
 
+  onPreviewImage(index: number): void {
+    //shows image
+    this.showMask = true;
+    this.previewImage = true;
+    this.currentIndex = index;
+    this.currentLightboxImage = this.galleryData[index];
+  }
+
+  onAnimationEnd(event: AnimationEvent) {
+    if(event.toState === 'void') {
+      this.showMask = false;
+    }
+  }
+
+  onClosePreview() {
+    this.previewImage = false;
+    this.showMask = false;
+  }
+
+  next(): void {
+    this.currentIndex += 1;
+    if(this.currentIndex > this.galleryData.length - 1) {
+      this.currentIndex = 0;
+    }
+    this.currentLightboxImage = this.galleryData[this.currentIndex];
+  }
+
+  prev(): void {
+    this.currentIndex -= 1;
+    if(this.currentIndex < 0) {
+      this.currentIndex = this.galleryData.length - 1;
+    }
+    this.currentLightboxImage = this.galleryData[this.currentIndex];
+  }
 }
